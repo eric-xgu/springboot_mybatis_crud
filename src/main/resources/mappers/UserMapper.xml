@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ringo.dao.UserDao">
+    <!--dao层的参数与方法名对齐id-->
+    <select id="queryUserByName" parameterType="string" resultType="com.ringo.vo.User">
+        select id, username, passwd
+        from user where username=#{name};
+    </select>
+    <select id="queryUserById" parameterType="integer" resultType="com.ringo.vo.User">
+        select id, username, passwd
+        from user where id=#{id};
+    </select>
+
+    <!--useGeneratedKeys="true" 通过数据库的自增获取主键 keyProperty="id" 将主键赋值给字段-->
+    <insert id="save" parameterType="user" useGeneratedKeys="true" keyProperty="id">
+        insert into user(username,passwd) values(#{username},#{passwd})
+    </insert>
+
+    <update id="update" parameterType="user">
+        update user set username=#{username},passwd=#{passwd} where id=#{id}
+    </update>
+
+    <!--使用UserQuery的username来做查询-->
+    <select id="selectByParameters" parameterType="com.ringo.vo.UserQuery" resultType="user">
+        select * from user
+        <where>
+            <if test="null !=username and username!=''">
+                  and username like concat('%',#{username},'%')
+            </if>
+        </where>
+    </select>
+
+    <delete id="delete" parameterType="integer">
+        delete from user where id=#{id}
+    </delete>
+</mapper>
