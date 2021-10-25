@@ -3,8 +3,10 @@ package com.ringo.vo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.io.Serializable;
+
 @ApiModel(description ="用户实体对象" )
-public class User
+public class User implements Serializable
 {
     @ApiModelProperty(value = "用户id")
     private int id;

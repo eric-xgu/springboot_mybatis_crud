@@ -7,6 +7,8 @@ import com.ringo.utils.AssetUtil;
 import com.ringo.vo.User;
 import com.ringo.vo.UserQuery;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -17,13 +19,16 @@ public class UserService {
     @Resource
     private UserDao userDao;
 
+    //与xml中的name对应,key与参数对应
+    @Cacheable(value = "users",key = "#name")
     public User queryUserByUsername(String name) {
         return userDao.queryUserByName(name);
     }
-
+    @Cacheable(value = "users",key = "#id")
     public User queryUserById(Integer id) {
         return userDao.queryUserById(id);
     }
+
     public void save(User user){
         AssetUtil.isTrue(StringUtils.isBlank(user.getUsername()),"用户名不能为空！");
         AssetUtil.isTrue(StringUtils.isBlank(user.getPasswd()),"用户密码不能为空！");
@@ -32,6 +37,7 @@ public class UserService {
 
     };
     //修改自己的信息
+    @CacheEvict(value = "users",key = "#user.id")
     public void update(User user){
         AssetUtil.isTrue(StringUtils.isBlank(user.getUsername()),"用户名不能为空！");
         AssetUtil.isTrue(StringUtils.isBlank(user.getPasswd()),"用户名密码不能为空！");
@@ -43,12 +49,14 @@ public class UserService {
     };
 
     //多条件查询有分页
+    @Cacheable(value = "users",key = "#userQuery.username+'-'+#userQuery.pagenum+'-'+#userQuery.pagesize")
     public PageInfo<User> selectByParameters(UserQuery userQuery){
         PageHelper.startPage(userQuery.getPagenum(),userQuery.getPagesize());
         List<User> list=userDao.selectByParameters(userQuery);
         return new PageInfo<User>(list);
     };
 
+    @CacheEvict(value = "users",allEntries = true)
     public  void delete(Integer id){
         AssetUtil.isTrue(null==id||null==userDao.queryUserById(id),"用户不存在");
         AssetUtil.isTrue(userDao.delete(id)<1,"用户删除失败");

@@ -21,7 +21,6 @@ public class UserController {
     @ApiImplicitParam(name="username",value="查询参数",required = true,paramType = "path")
     @GetMapping("user/get1/{username}")
     public User queryUserByName(@PathVariable String username){
-        System.out.println("用户名："+username);
         return userService.queryUserByUsername(username);
     }
 
@@ -67,7 +66,17 @@ public class UserController {
         }
         return resultInfo;
     }
-    @PutMapping("user/list")
+    @GetMapping("user/list")
+    public PageInfo<User> queryUserByParams1(UserQuery userQuery){
+        return userService.selectByParameters(userQuery);
+    }
+    @GetMapping("user/list/{username}")
+    public PageInfo<User> queryUserByParams2(@PathVariable String username){
+        UserQuery userQuery=new UserQuery();
+        userQuery.setUsername(username);
+        return userService.selectByParameters(userQuery);
+    }
+    @PutMapping("user/list1")
     public PageInfo<User> queryUserByParams(@RequestBody UserQuery userQuery){
         return userService.selectByParameters(userQuery);
     }

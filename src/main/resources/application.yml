@@ -14,6 +14,9 @@ spring:
       #项目重新编译报404问题
       poll-interval: 3000
       quiet-period: 1000
+  cache:
+    ehcache:
+      config: classpath:ehcache.xml
 
 #mybatis配置
 mybatis:
