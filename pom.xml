@@ -34,6 +34,10 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-validation</artifactId>
+    </dependency>
     <!--<dependency>-->
     <!--<groupId>org.springframework.boot</groupId>-->
     <!--<artifactId>spring-boot-starter-freemarker</artifactId>-->
@@ -120,8 +124,13 @@
       <artifactId>ehcache</artifactId>
       <version>2.10.6</version>
     </dependency>
+    <!--quartz定时job-->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-quartz</artifactId>
+    </dependency>
 
-
+   
   </dependencies>
 
   <build>

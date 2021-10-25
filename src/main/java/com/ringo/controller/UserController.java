@@ -7,9 +7,13 @@ import com.ringo.service.UserService;
 import com.ringo.vo.User;
 import com.ringo.vo.UserQuery;
 import io.swagger.annotations.*;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
+
 
 @Api(tags="用户管理模块")
 @RestController
@@ -29,19 +33,30 @@ public class UserController {
         return userService.queryUserById(id);
     }
 
-    //控制层将异常返回给前端,put方法
     @PutMapping("user/add")
-    public ResultInfo saveUser(@RequestBody User user){
+    public ResultInfo saveUser1(@RequestBody User user){
         ResultInfo resultInfo=new ResultInfo();
-        try {
-            userService.save(user);
-        }catch (ParamsException e){
-            resultInfo.setCode(e.getCode());
-            resultInfo.setMsg(e.getMsg());
-            e.printStackTrace();
-        }
+        userService.save(user);
         return resultInfo;
     }
+    //控制层将异常返回给前端,put方法
+    @PostMapping("user02")
+    @ApiOperation(value = "用户添加")
+    @ApiImplicitParam(name = "user02",value = "用户实体类",dataType = "User")
+    //@PutMapping("user/add")
+    public ResultInfo saveUser(@RequestBody User user){
+        ResultInfo resultInfo=new ResultInfo();
+        userService.save(user);
+        return resultInfo;
+    }
+    @PostMapping("user03")
+    //@PutMapping("user/add")
+    public ResultInfo saveUser2(@Valid User user){
+        ResultInfo resultInfo=new ResultInfo();
+        userService.save(user);
+        return resultInfo;
+    }
+
     @DeleteMapping("user/delete/{id}")
     public ResultInfo deleteUserById(@PathVariable Integer id){
         ResultInfo resultInfo=new ResultInfo();

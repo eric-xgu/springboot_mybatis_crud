@@ -10,6 +10,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -26,6 +28,7 @@ public class UserService {
     }
     @Cacheable(value = "users",key = "#id")
     public User queryUserById(Integer id) {
+        AssetUtil.isTrue(true,"异常的测试");
         return userDao.queryUserById(id);
     }
 
@@ -56,9 +59,11 @@ public class UserService {
         return new PageInfo<User>(list);
     };
 
+    @Transactional(propagation = Propagation.REQUIRED)
     @CacheEvict(value = "users",allEntries = true)
-    public  void delete(Integer id){
+    public  void delete(Integer id) {
         AssetUtil.isTrue(null==id||null==userDao.queryUserById(id),"用户不存在");
         AssetUtil.isTrue(userDao.delete(id)<1,"用户删除失败");
+        int a=1/0;
     };
 }
